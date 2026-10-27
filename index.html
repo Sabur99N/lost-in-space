@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#04060f" />
+    <meta name="description" content="LOST — an immersive WebGL space narrative. Adrift above Earth, one astronaut, one fading signal. Built with Three.js, GSAP & Lenis." />
+    <meta property="og:title" content="LOST — A Space Narrative" />
+    <meta property="og:description" content="Adrift above Earth. One astronaut. One fading signal." />
+    <meta property="og:type" content="website" />
+    <title>LOST — A Space Narrative</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2304060f'/%3E%3Ccircle cx='16' cy='16' r='8' fill='%234488ff'/%3E%3Ccircle cx='16' cy='16' r='11' fill='none' stroke='%2346e6ff' stroke-width='1' opacity='0.6'/%3E%3Ccircle cx='24' cy='9' r='1.5' fill='%23fff'/%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="fetch" href="/models/astronaut-float.glb" crossorigin />
+</head>
+<body>
+    <!-- ============ LOADER ============ -->
+    <div id="loader">
+        <div class="loader-content">
+            <span class="logo-text">UT&middot;7</span>
+            <div class="loader-line"></div>
+            <div class="progress-bar"><div id="progress"></div></div>
+            <p class="loader-status">SYNCING SATELLITE FEED&hellip; <span id="progress-num">0</span>%</p>
+        </div>
+    </div>
+
+    <!-- ============ CUSTOM CURSOR ============ -->
+    <div class="cursor-ring"></div>
+    <div class="cursor-dot"></div>
+
+    <!-- ============ WEBGL CANVAS ============ -->
+    <canvas id="webgl"></canvas>
+    <div class="grain-overlay"></div>
+    <div class="vignette"></div>
+
+    <!-- ============ NAV ============ -->
+    <header class="nav">
+        <a href="#hero" class="brand" data-hover>
+            <span class="brand-mark">LOST</span>
+            <span class="brand-sub">// MISSION UT-7</span>
+        </a>
+        <nav class="nav-links">
+            <a href="#drift" data-hover>Drift</a>
+            <a href="#terminator" data-hover>Terminator</a>
+            <a href="#vitals" data-hover>Vitals</a>
+            <a href="#log" data-hover>Log</a>
+        </nav>
+        <button id="audio-toggle" class="audio-toggle" data-hover aria-label="Toggle ambient audio">
+            <span class="eq"><i></i><i></i><i></i><i></i></span>
+            <span class="audio-label">AMBIENT</span>
+        </button>
+    </header>
+
+    <!-- ============ SCROLL PROGRESS ============ -->
+    <div class="scroll-progress"><div id="scroll-progress-bar"></div></div>
+
+    <!-- ============ HUD ============ -->
+    <div class="hud">
+        <div class="hud-corner top-left">
+            SYSTEM: <span class="ok">ACTIVE</span><br />
+            O2: <span id="o2">84</span>% <span class="blink">&#9679;</span>
+        </div>
+        <div class="hud-corner top-right">
+            LAT: <span id="lat">0.00</span>&deg;<br />
+            LON: <span id="lon">0.00</span>&deg;
+        </div>
+        <div class="hud-reticle">
+            <span class="reticle-label">TRACKING</span>
+        </div>
+        <div class="hud-bottom">SCANNING SECTOR 7-G &mdash; <span id="signal">NO SIGNAL DETECTED</span></div>
+    </div>
+
+    <!-- ============ NARRATIVE ============ -->
+    <main>
+        <section class="section" id="hero">
+            <div class="container center">
+                <p class="eyebrow reveal">MISSION UT-7 &middot; ORBITAL INSERTION FAILED</p>
+                <h1 class="reveal">LOST</h1>
+                <p class="lead reveal">COMMUNICATION TERMINATED.<br />GROUND CONTROL UNREACHABLE.</p>
+                <div class="scroll-cue reveal"><span>SCROLL TO DRIFT</span><span class="cue-line"></span></div>
+            </div>
+        </section>
+
+        <section class="section" id="drift">
+            <div class="container">
+                <p class="index-num reveal">01</p>
+                <h2 class="reveal">THE DRIFT</h2>
+                <p class="reveal">Without gravity, time becomes an illusion. Every rotation carries me further from the last known coordinate, into a silence that has no floor.</p>
+            </div>
+        </section>
+
+        <section class="section" id="terminator">
+            <div class="container right">
+                <p class="index-num reveal">02</p>
+                <h2 class="reveal">TERMINATOR</h2>
+                <p class="reveal">Where the sun meets the shadow. Billions of lives, one thin blue line &mdash; and I watch it slide past, unreachable, every ninety-two minutes.</p>
+            </div>
+        </section>
+
+        <section class="section" id="vitals">
+            <div class="container technical">
+                <p class="index-num reveal">03</p>
+                <h2 class="reveal">VITAL SIGNS</h2>
+                <div class="data-grid reveal">
+                    <div class="data-item"><h4>VELOCITY</h4><p data-count="27600" data-suffix=" KM/H">0</p></div>
+                    <div class="data-item"><h4>HEART RATE</h4><p data-count="112" data-suffix=" BPM">0</p></div>
+                    <div class="data-item"><h4>ALTITUDE</h4><p data-count="408" data-suffix=" KM">0</p></div>
+                    <div class="data-item"><h4>SUIT TEMP</h4><p data-count="12" data-suffix="&deg;C">0</p></div>
+                </div>
+                <p class="reveal">Body temperature dropping. Heaters holding at 12%. The suit keeps a diary of everything the body forgets.</p>
+            </div>
+        </section>
+
+        <section class="section" id="marble">
+            <div class="container center wide">
+                <p class="index-num reveal">04</p>
+                <h2 class="reveal">THE PALE BLUE MARBLE</h2>
+                <p class="reveal">From up here, borders vanish. There is only weather, ocean, and the faint amber web of every city that ever kept a light on for someone.</p>
+                <div class="fact-grid reveal">
+                    <div class="fact"><span class="fact-num">71%</span><span class="fact-label">Surface covered by ocean</span></div>
+                    <div class="fact"><span class="fact-num">16</span><span class="fact-label">Sunrises witnessed per day</span></div>
+                    <div class="fact"><span class="fact-num">100km</span><span class="fact-label">To the edge of space</span></div>
+                    <div class="fact"><span class="fact-num">1.28s</span><span class="fact-label">Light-delay to the Moon</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="log">
+            <div class="container">
+                <p class="index-num reveal">05</p>
+                <h2 class="reveal">MISSION LOG</h2>
+                <ul class="timeline">
+                    <li class="reveal"><span class="t-time">T+00:00:00</span><span class="t-event">Orbital insertion nominal. All systems green.</span></li>
+                    <li class="reveal"><span class="t-time">T+04:12:37</span><span class="t-event">Micro-debris impact. Hull breach on module C.</span></li>
+                    <li class="reveal"><span class="t-time">T+04:13:02</span><span class="t-event">Tether severed. Uncontrolled drift begins.</span></li>
+                    <li class="reveal"><span class="t-time">T+06:48:19</span><span class="t-event">Ground contact lost. Last telemetry archived.</span></li>
+                    <li class="reveal"><span class="t-time">T+12:00:00</span><span class="t-event">Life support rerouted to reserve cells.</span></li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="section" id="silence">
+            <div class="container center">
+                <p class="index-num reveal">06</p>
+                <h1 class="reveal">SILENCE</h1>
+                <p class="lead reveal">The universe doesn't speak.<br />It only waits.</p>
+                <button class="btn-primary reveal" data-hover><span>REBOOT SYSTEMS</span></button>
+            </div>
+        </section>
+    </main>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-col">
+                <span class="footer-brand">LOST</span>
+                <p>An immersive WebGL space narrative.</p>
+            </div>
+            <div class="footer-col">
+                <span class="footer-h">BUILT WITH</span>
+                <p>Three.js &middot; GSAP &middot; Lenis &middot; Vite</p>
+            </div>
+            <div class="footer-col">
+                <span class="footer-h">STATUS</span>
+                <p>Signal lost &middot; Beacon active</p>
+            </div>
+        </div>
+        <div class="footer-base">
+            <span>&copy; UT-7 ORBITAL ARCHIVE</span>
+            <span class="footer-coords" id="footer-coords">28.5° N / 80.6° W</span>
+        </div>
+    </footer>
+
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>
